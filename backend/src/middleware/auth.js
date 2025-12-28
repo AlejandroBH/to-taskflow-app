@@ -1,0 +1,41 @@
+const jwt = require("jsonwebtoken");
+const { User } = require("../models");
+
+const protect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await User.findByPk(decoded.id);
+
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(401).json({ message: "No autorizado, token fallido" });
+    }
+  }
+
+  if (!token) {
+    res.status(401).json({ message: "No autorizado, sin ficha" });
+  }
+};
+
+const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        message: `User role ${req.user.role} no está autorizado a acceder a esta ruta`,
+      });
+    }
+    next();
+  };
+};
+
+module.exports = { protect, authorize };
