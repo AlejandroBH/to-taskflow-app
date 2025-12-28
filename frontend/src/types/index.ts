@@ -20,6 +20,7 @@ export interface Project {
   endDate?: string;
   status: "active" | "completed" | "archived";
   managerId: number;
+  manager?: User;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,4 +36,21 @@ export interface Task {
   assignedTo?: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Metrics {
+  projects: {
+    total: number;
+    active: number;
+    completed: number;
+  };
+  tasks: {
+    total: number;
+    pending: number;
+    inProgress: number;
+    completed: number;
+  };
+  users: {
+    total: number;
+  };
 }

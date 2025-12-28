@@ -52,19 +52,18 @@ export default function ProjectList() {
                 {project.name}
               </h3>
               <span
-                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  project.status === "active"
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${project.status === "active"
                     ? "bg-green-100 text-green-800"
                     : project.status === "completed"
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-gray-100 text-gray-800"
-                }`}
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
               >
                 {project.status === "active"
                   ? "Activo"
                   : project.status === "completed"
-                  ? "Completado"
-                  : "Archivado"}
+                    ? "Completado"
+                    : "Archivado"}
               </span>
             </div>
             <p className="mt-2 text-sm text-gray-500 line-clamp-2">
@@ -79,7 +78,7 @@ export default function ProjectList() {
               </div>
               <div className="flex items-center">
                 <User className="mr-1.5 h-4 w-4 flex-shrink-0 text-gray-400" />
-                Dueño #{project.managerId}
+                {project.manager?.name || `Dueño #${project.managerId}`}
               </div>
             </div>
           </Link>
