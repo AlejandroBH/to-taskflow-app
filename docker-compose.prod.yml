@@ -1,0 +1,52 @@
+# docker-compose.prod.yml
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - taskflow-network
+
+  backend:
+    image: taskflow-backend:latest
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      NODE_ENV: production
+    networks:
+      - taskflow-network
+
+  frontend:
+    image: taskflow-frontend:latest
+    environment:
+      REACT_APP_API_URL: ${API_URL}
+    networks:
+      - taskflow-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ssl_certs:/etc/ssl/certs
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - taskflow-network
+
+networks:
+  taskflow-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  ssl_certs:
