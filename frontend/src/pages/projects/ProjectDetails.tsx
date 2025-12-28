@@ -71,9 +71,12 @@ export default function ProjectDetails() {
                 <div className="block hover:bg-gray-50">
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
-                      <p className="truncate text-sm font-medium text-indigo-600">
+                      <Link
+                        to={`/projects/${id}/tasks/${task.id}`}
+                        className="truncate text-sm font-medium text-indigo-600 hover:text-indigo-900"
+                      >
                         {task.title}
-                      </p>
+                      </Link>
                       <div className="ml-2 flex flex-shrink-0">
                         <span
                           className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${

@@ -14,6 +14,7 @@ import ProjectList from "./pages/projects/ProjectList";
 import ProjectForm from "./pages/projects/ProjectForm";
 import ProjectDetails from "./pages/projects/ProjectDetails";
 import TaskForm from "./pages/tasks/TaskForm";
+import TaskDetails from "./pages/tasks/TaskDetails";
 
 function App() {
   return (
@@ -32,6 +33,10 @@ function App() {
               <Route
                 path="/projects/:projectId/tasks/new"
                 element={<TaskForm />}
+              />
+              <Route
+                path="/projects/:projectId/tasks/:taskId"
+                element={<TaskDetails />}
               />
             </Route>
           </Route>

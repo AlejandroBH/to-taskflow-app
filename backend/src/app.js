@@ -32,6 +32,7 @@ app.use("/api/projects", require("./routes/project.routes"));
 app.use("/api/tasks", require("./routes/task.routes"));
 app.use("/api/comments", require("./routes/comment.routes"));
 app.use("/api/files", require("./routes/file.routes"));
+app.use("/api/users", require("./routes/user.routes"));
 
 // Servir archivos subidos
 const path = require("path");
