@@ -22,6 +22,7 @@ export default function ProjectForm() {
     formState: { errors, isSubmitting },
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       description: "",
@@ -86,6 +87,11 @@ export default function ProjectForm() {
               {...register("description")}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
             />
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.description.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -104,6 +110,11 @@ export default function ProjectForm() {
                 {...register("startDate")}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
               />
+              {errors.startDate && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.startDate.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -121,6 +132,11 @@ export default function ProjectForm() {
                 {...register("endDate")}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
               />
+              {errors.endDate && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.endDate.message}
+                </p>
+              )}
             </div>
           </div>
         </div>

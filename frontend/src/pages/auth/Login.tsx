@@ -25,6 +25,7 @@ export default function Login() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    mode: "onChange",
   });
 
   const onSubmit = async (data: LoginFormData) => {

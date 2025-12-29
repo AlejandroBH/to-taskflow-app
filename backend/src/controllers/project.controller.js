@@ -14,8 +14,8 @@ const createProject = async (req, res) => {
     const project = await Project.create({
       name,
       description,
-      startDate,
-      endDate,
+      startDate: startDate || null,
+      endDate: endDate || null,
       managerId: req.user.id,
       status: "active",
     });

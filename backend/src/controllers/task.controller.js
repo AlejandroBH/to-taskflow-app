@@ -21,7 +21,7 @@ const createTask = async (req, res) => {
       title,
       description,
       priority,
-      dueDate,
+      dueDate: dueDate || null,
       projectId,
       assignedTo,
       status: "pending",
