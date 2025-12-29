@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { LogOut, Home, FolderKanban, Menu, X } from "lucide-react";
+import { LogOut, Home, FolderKanban, Menu, X, Users } from "lucide-react";
 import { useState } from "react";
 
 export default function Layout() {
@@ -18,6 +18,10 @@ export default function Layout() {
     { name: "Panel Principal", href: "/", icon: Home },
     { name: "Proyectos", href: "/projects", icon: FolderKanban },
   ];
+
+  if (user?.role === "admin") {
+    navigation.push({ name: "Usuarios", href: "/users", icon: Users });
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">

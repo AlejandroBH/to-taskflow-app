@@ -16,6 +16,8 @@ import ProjectDetails from "./pages/projects/ProjectDetails";
 import TaskForm from "./pages/tasks/TaskForm";
 import TaskDetails from "./pages/tasks/TaskDetails";
 import Profile from "./pages/Profile";
+import Users from "./pages/admin/Users";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
@@ -40,6 +42,9 @@ function App() {
                 path="/projects/:projectId/tasks/:taskId"
                 element={<TaskDetails />}
               />
+              <Route element={<AdminRoute />}>
+                <Route path="/users" element={<Users />} />
+              </Route>
             </Route>
           </Route>
 
