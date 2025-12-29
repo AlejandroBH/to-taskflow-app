@@ -8,7 +8,7 @@ const {
 } = require("../controllers/user.controller");
 const { protect, authorize } = require("../middleware/auth");
 
-router.get("/", protect, authorize("admin"), getUsers);
+router.get("/", protect, authorize("admin", "manager"), getUsers);
 router.post("/", protect, authorize("admin"), createUser);
 router.put("/:id", protect, authorize("admin"), updateUser);
 router.delete("/:id", protect, authorize("admin"), deleteUser);

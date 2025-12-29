@@ -33,7 +33,9 @@ export default function ProjectDetails() {
 
   const handleDeleteProject = async () => {
     if (!project) return;
-    if (window.confirm("¿Estás seguro de que quieres eliminar este proyecto?")) {
+    if (
+      window.confirm("¿Estás seguro de que quieres eliminar este proyecto?")
+    ) {
       try {
         await api.delete(`/projects/${project.id}`);
         navigate("/projects");
@@ -57,22 +59,26 @@ export default function ProjectDetails() {
           <p className="mt-1 text-sm text-gray-500">{project.description}</p>
         </div>
         <div className="mt-4 flex md:ml-4 md:mt-0 space-x-3">
-          {project && user && (user.id === project.managerId || user.role === "admin") && (
-            <button
-              onClick={handleDeleteProject}
-              className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          {project &&
+            user &&
+            (user.id === project.managerId || user.role === "admin") && (
+              <button
+                onClick={handleDeleteProject}
+                className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+              >
+                <Trash className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+                Eliminar Proyecto
+              </button>
+            )}
+          {user?.role !== "member" && (
+            <Link
+              to={`/projects/${id}/tasks/new`}
+              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              <Trash className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-              Eliminar Proyecto
-            </button>
+              <Plus className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+              Agregar Tarea
+            </Link>
           )}
-          <Link
-            to={`/projects/${id}/tasks/new`}
-            className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <Plus className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-            Agregar Tarea
-          </Link>
         </div>
       </div>
 
@@ -104,18 +110,19 @@ export default function ProjectDetails() {
                       </Link>
                       <div className="ml-2 flex flex-shrink-0">
                         <span
-                          className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${task.status === "completed"
+                          className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                            task.status === "completed"
                               ? "bg-green-100 text-green-800"
                               : task.status === "in-progress"
-                                ? "bg-blue-100 text-blue-800"
-                                : "bg-yellow-100 text-yellow-800"
-                            }`}
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
                         >
                           {task.status === "completed"
                             ? "Completada"
                             : task.status === "in-progress"
-                              ? "En Progreso"
-                              : "Pendiente"}
+                            ? "En Progreso"
+                            : "Pendiente"}
                         </span>
                       </div>
                     </div>
@@ -127,8 +134,8 @@ export default function ProjectDetails() {
                           {task.priority === "high"
                             ? "Alta"
                             : task.priority === "medium"
-                              ? "Media"
-                              : "Baja"}
+                            ? "Media"
+                            : "Baja"}
                         </p>
                       </div>
                       <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
@@ -150,6 +157,6 @@ export default function ProjectDetails() {
           )}
         </ul>
       </div>
-    </div >
+    </div>
   );
 }

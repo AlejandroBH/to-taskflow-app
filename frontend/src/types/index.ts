@@ -34,6 +34,7 @@ export interface Task {
   dueDate?: string;
   projectId: number;
   assignedTo?: number;
+  assignee?: User;
   createdAt: string;
   updatedAt: string;
 }

@@ -3,6 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import { useAuth } from "../../context/AuthContext";
+import type { User } from "../../types";
+import { useState, useEffect } from "react";
 
 const projectSchema = z.object({
   name: z.string().min(1, "El nombre es obligatorio"),
@@ -10,12 +13,30 @@ const projectSchema = z.object({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   status: z.enum(["active", "completed", "archived"]),
+  managerId: z.string().optional(),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
 
 export default function ProjectForm() {
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    if (currentUser?.role === "admin") {
+      const fetchUsers = async () => {
+        try {
+          const { data } = await api.get("/users");
+          setUsers(data);
+        } catch (error) {
+          console.error("Error fetching users:", error);
+        }
+      };
+      fetchUsers();
+    }
+  }, [currentUser]);
+
   const {
     register,
     handleSubmit,
@@ -27,6 +48,7 @@ export default function ProjectForm() {
       name: "",
       description: "",
       status: "active",
+      managerId: "",
     },
   });
 
@@ -139,6 +161,36 @@ export default function ProjectForm() {
               )}
             </div>
           </div>
+
+          {currentUser?.role === "admin" && (
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="managerId"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Asignar a (Manager)
+              </label>
+              <div className="mt-2">
+                <select
+                  id="managerId"
+                  {...register("managerId")}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                >
+                  <option value="">Seleccionar usuario...</option>
+                  {users.map((u) => (
+                    <option key={u.id} value={u.id.toString()}>
+                      {u.name} ({u.email})
+                    </option>
+                  ))}
+                </select>
+                {errors.managerId && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.managerId.message}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-x-6">

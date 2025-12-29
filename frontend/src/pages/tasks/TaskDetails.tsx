@@ -20,14 +20,21 @@ export default function TaskDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [taskRes, projectRes, usersRes] = await Promise.all([
+        const [taskRes, projectRes] = await Promise.all([
           api.get<Task>(`/tasks/${taskId}`),
           api.get<Project>(`/projects/${projectId}`),
-          api.get<UserType[]>("/users"),
         ]);
         setTask(taskRes.data);
         setProject(projectRes.data);
-        setUsers(usersRes.data);
+
+        if (user?.role === "admin" || user?.role === "manager") {
+          try {
+            const usersRes = await api.get<UserType[]>("/users");
+            setUsers(usersRes.data);
+          } catch (err) {
+            console.warn("Could not fetch users list", err);
+          }
+        }
       } catch (error) {
         console.error("Error al obtener los detalles:", error);
       } finally {
@@ -35,7 +42,7 @@ export default function TaskDetails() {
       }
     };
     fetchData();
-  }, [projectId, taskId]);
+  }, [projectId, taskId, user?.role]);
 
   const handleStatusChange = async (newStatus: "pending" | "completed") => {
     try {
@@ -145,8 +152,7 @@ export default function TaskDetails() {
                     ))}
                   </select>
                 ) : (
-                  users.find((u) => u.id === task.assignedTo)?.name ||
-                  "Sin asignar"
+                  task.assignee?.name || "Sin asignar"
                 )}
               </dd>
             </div>

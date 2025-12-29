@@ -12,6 +12,12 @@ const createTask = async (req, res) => {
         .json({ message: "Se requieren el título y el ID del proyecto" });
     }
 
+    if (req.user.role === "member") {
+      return res
+        .status(403)
+        .json({ message: "No tienes permisos para crear tareas." });
+    }
+
     const project = await Project.findByPk(projectId);
     if (!project) {
       return res.status(404).json({ message: "Proyecto no encontrado" });
@@ -89,6 +95,12 @@ const updateTask = async (req, res) => {
       return res.status(404).json({ message: "Tarea no encontrada" });
     }
 
+    if (req.user.role === "member") {
+      return res
+        .status(403)
+        .json({ message: "No tienes permisos para actualizar tareas." });
+    }
+
     const updatedTask = await task.update(req.body);
     res.json(updatedTask);
   } catch (error) {
@@ -104,6 +116,12 @@ const deleteTask = async (req, res) => {
 
     if (!task) {
       return res.status(404).json({ message: "Tarea no encontrada" });
+    }
+
+    if (req.user.role === "member") {
+      return res
+        .status(403)
+        .json({ message: "No tienes permisos para eliminar tareas." });
     }
 
     await task.destroy();

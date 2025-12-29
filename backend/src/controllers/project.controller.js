@@ -11,12 +11,23 @@ const createProject = async (req, res) => {
         .json({ message: "El nombre del proyecto es obligatorio." });
     }
 
+    if (req.user.role === "member") {
+      return res
+        .status(403)
+        .json({ message: "No tienes permisos para crear proyectos." });
+    }
+
+    const managerId =
+      req.user.role === "admin" && req.body.managerId
+        ? req.body.managerId
+        : req.user.id;
+
     const project = await Project.create({
       name,
       description,
       startDate: startDate || null,
       endDate: endDate || null,
-      managerId: req.user.id,
+      managerId,
       status: "active",
     });
 
@@ -74,6 +85,12 @@ const updateProject = async (req, res) => {
 
     if (project.managerId !== req.user.id && req.user.role !== "admin") {
       return res.status(401).json({ message: "Usuario no autorizado" });
+    }
+
+    if (req.user.role === "admin" && req.body.managerId) {
+      req.body.managerId = parseInt(req.body.managerId);
+    } else {
+      delete req.body.managerId;
     }
 
     const updatedProject = await project.update(req.body);

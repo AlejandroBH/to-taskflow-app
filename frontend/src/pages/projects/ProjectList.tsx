@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import api from "../../api/axios";
 import type { Project } from "../../types";
 import { Plus, Calendar, User } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ProjectList() {
+  const { user } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,13 +33,15 @@ export default function ProjectList() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold text-gray-900">Proyectos</h1>
-        <Link
-          to="/projects/new"
-          className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Nuevo Proyecto
-        </Link>
+        {user?.role !== "member" && (
+          <Link
+            to="/projects/new"
+            className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Nuevo Proyecto
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -52,18 +56,19 @@ export default function ProjectList() {
                 {project.name}
               </h3>
               <span
-                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${project.status === "active"
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  project.status === "active"
                     ? "bg-green-100 text-green-800"
                     : project.status === "completed"
-                      ? "bg-blue-100 text-blue-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-gray-100 text-gray-800"
+                }`}
               >
                 {project.status === "active"
                   ? "Activo"
                   : project.status === "completed"
-                    ? "Completado"
-                    : "Archivado"}
+                  ? "Completado"
+                  : "Archivado"}
               </span>
             </div>
             <p className="mt-2 text-sm text-gray-500 line-clamp-2">
@@ -94,13 +99,15 @@ export default function ProjectList() {
             Comienza creando un nuevo proyecto.
           </p>
           <div className="mt-6">
-            <Link
-              to="/projects/new"
-              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <Plus className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-              Nuevo Proyecto
-            </Link>
+            {user?.role !== "member" && (
+              <Link
+                to="/projects/new"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <Plus className="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+                Nuevo Proyecto
+              </Link>
+            )}
           </div>
         </div>
       )}
