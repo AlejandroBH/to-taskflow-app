@@ -15,6 +15,7 @@ import ProjectForm from "./pages/projects/ProjectForm";
 import ProjectDetails from "./pages/projects/ProjectDetails";
 import TaskForm from "./pages/tasks/TaskForm";
 import TaskDetails from "./pages/tasks/TaskDetails";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/projects" element={<ProjectList />} />
               <Route path="/projects/new" element={<ProjectForm />} />
               <Route path="/projects/:id" element={<ProjectDetails />} />

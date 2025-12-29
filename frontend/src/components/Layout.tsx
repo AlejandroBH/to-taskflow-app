@@ -75,7 +75,12 @@ export default function Layout() {
                 <p className="text-sm font-medium text-gray-700">
                   {user?.name || user?.email}
                 </p>
-                <p className="text-xs font-medium text-gray-500">Ver Perfil</p>
+                <Link
+                  to="/profile"
+                  className="text-xs font-medium text-gray-500 hover:text-indigo-600"
+                >
+                  Ver Perfil
+                </Link>
               </div>
             </div>
             <button
