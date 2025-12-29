@@ -19,9 +19,10 @@ docker compose up -d --build
 ```
 
 Esto levantará los siguientes servicios:
+
 - **db**: Base de datos PostgreSQL.
 - **backend**: Servidor API en `http://localhost:3001`.
-- **frontend**: Cliente React (si aplica) en `http://localhost:5173`.
+- **frontend**: Cliente React en `http://localhost:3000`.
 
 ### 2. Verificar estado
 
@@ -54,18 +55,22 @@ backend/
 ## Endpoints Principales
 
 ### Autenticación
+
 - `POST /api/auth/register` - Registrar usuario
 - `POST /api/auth/login` - Iniciar sesión
 
 ### Proyectos
+
 - `GET /api/projects` - Listar proyectos
 - `POST /api/projects` - Crear proyecto
 
 ### Tareas
+
 - `GET /api/tasks` - Listar tareas
 - `POST /api/tasks` - Crear tarea
 
 ### Métricas
+
 - `GET /api/metrics` - Estadísticas del dashboard
 
 ## Variables de Entorno
@@ -73,6 +78,7 @@ backend/
 Las variables de entorno principales están definidas en el `docker-compose.yml`. Para producción o ajustes locales, puedes crear un archivo `.env` en la carpeta backend (basado en `.env.example` si existiera).
 
 Variables clave:
+
 - `PORT`: 3001
 - `DATABASE_URL`: URL de conexión a Postgres
 - `JWT_SECRET`: Secreto para firmar tokens
