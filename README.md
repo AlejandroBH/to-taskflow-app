@@ -1,6 +1,6 @@
-# TaskFlow Backend
+# TaskFlow
 
-Este es el backend para la aplicación de gestión de proyectos TaskFlow, construido con **Node.js**, **Express**, **Sequelize** y **PostgreSQL**.
+TaskFlow es una aplicación de gestión de proyectos, construido con **Node.js**, **Express**, **Sequelize** y **PostgreSQL**.
 
 ## Requisitos Previos
 
