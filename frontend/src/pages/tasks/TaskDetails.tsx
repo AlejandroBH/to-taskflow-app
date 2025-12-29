@@ -17,6 +17,9 @@ export default function TaskDetails() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [files, setFiles] = useState<any[]>([]);
+  const [uploadingFile, setUploadingFile] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,6 +47,21 @@ export default function TaskDetails() {
     fetchData();
   }, [projectId, taskId, user?.role]);
 
+  useEffect(() => {
+    if (taskId) {
+      fetchFiles();
+    }
+  }, [taskId]);
+
+  const fetchFiles = async () => {
+    try {
+      const response = await api.get(`/files/${taskId}`);
+      setFiles(response.data);
+    } catch (error) {
+      console.error("Error fetching files:", error);
+    }
+  };
+
   const handleStatusChange = async (newStatus: "pending" | "completed") => {
     try {
       if (!task) return;
@@ -65,6 +83,31 @@ export default function TaskDetails() {
       setTask(data);
     } catch (error) {
       console.error("Error al asignar tarea:", error);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("taskId", taskId!);
+
+      setUploadingFile(true);
+      try {
+        await api.post("/files", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        fetchFiles();
+        e.target.value = "";
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        alert("Error al subir el archivo");
+      } finally {
+        setUploadingFile(false);
+      }
     }
   };
 
@@ -186,6 +229,74 @@ export default function TaskDetails() {
             </div>
           </div>
         )}
+
+        <div className="border-t border-gray-200 px-4 py-5 sm:px-6 bg-gray-50">
+          <h4 className="text-lg font-medium text-gray-900 mb-4">Adjuntos</h4>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500 mb-4">
+            Archivos relacionados con esta tarea.
+          </p>
+          <ul role="list" className="divide-y divide-gray-200 mb-4">
+            {files.map((file) => (
+              <li
+                key={file.id}
+                className="py-3 flex justify-between text-sm items-center"
+              >
+                <div className="flex items-center">
+                  <svg
+                    className="h-5 w-5 text-gray-400 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <a
+                    href={`http://localhost:3001${file.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-indigo-600 hover:text-indigo-500 truncate"
+                  >
+                    {file.filename}
+                  </a>
+                </div>
+                <div className="ml-4 flex-shrink-0 text-gray-500 text-xs">
+                  Subido por {file.uploader?.name} el{" "}
+                  {new Date(file.createdAt).toLocaleDateString()}
+                </div>
+              </li>
+            ))}
+            {files.length === 0 && (
+              <li className="py-2 text-gray-500 italic">
+                No hay archivos adjuntos.
+              </li>
+            )}
+          </ul>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Subir archivo
+            </label>
+            <div className="mt-1 flex items-center space-x-4">
+              <input
+                type="file"
+                onChange={handleFileUpload}
+                className="block w-full text-sm text-slate-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-indigo-50 file:text-indigo-700
+                  hover:file:bg-indigo-100"
+              />
+              {uploadingFile && (
+                <span className="text-sm text-gray-500">Subiendo...</span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

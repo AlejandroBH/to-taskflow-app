@@ -62,6 +62,7 @@ const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        profileImage: user.profileImage,
         token: generateToken(user.id),
       });
     } else {
@@ -81,6 +82,7 @@ const getMe = async (req, res) => {
       name: req.user.name,
       email: req.user.email,
       role: req.user.role,
+      profileImage: req.user.profileImage,
     };
     res.status(200).json(user);
   } catch (error) {

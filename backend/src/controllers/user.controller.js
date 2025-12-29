@@ -90,9 +90,38 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// POST /api/users/profile/avatar
+const uploadAvatar = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ message: "No se ha subido ningún archivo" });
+    }
+
+    const user = await User.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const url = `/uploads/${req.file.filename}`;
+    user.profileImage = url;
+    await user.save();
+
+    res.json({
+      url: user.profileImage,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error del servidor" });
+  }
+};
+
 module.exports = {
   getUsers,
   createUser,
   updateUser,
   deleteUser,
+  uploadAvatar,
 };

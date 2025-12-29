@@ -5,7 +5,11 @@ const helmet = require("helmet");
 const app = express();
 
 // Middleware
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 app.use(cors());
 const morgan = require("morgan");
 app.use(morgan("dev"));
@@ -21,7 +25,7 @@ const { User, Project, Task, Comment, File } = require("./models");
 
 connectDB().then(() => {
   sequelize
-    .sync({ force: false })
+    .sync({ alter: true })
     .then(() => console.log("Database synced"))
     .catch((err) => console.error("Error syncing database:", err));
 });
