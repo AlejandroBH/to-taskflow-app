@@ -89,12 +89,13 @@ export default function TaskDetails() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("taskId", taskId!);
 
       setUploadingFile(true);
       try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("taskId", taskId!);
+
         await api.post("/files", formData, {
           headers: {
             "Content-Type": "multipart/form-data",

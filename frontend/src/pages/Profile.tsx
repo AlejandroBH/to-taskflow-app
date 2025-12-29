@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
+import { compressImage } from "../utils/imageUtils";
 
 export default function Profile() {
   const { user, checkAuth } = useAuth();
@@ -9,11 +10,12 @@ export default function Profile() {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const formData = new FormData();
-      formData.append("file", file);
 
       setUploading(true);
       try {
+        const compressedFile = await compressImage(file);
+        const formData = new FormData();
+        formData.append("file", compressedFile);
         await api.post("/users/profile/avatar", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
